@@ -10,8 +10,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:isar/isar.dart';
 import 'result_model.dart';
 import 'isar_service.dart';
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
+//import 'package:device_preview/device_preview.dart';
+//import 'package:flutter/foundation.dart';
 
 late Isar isar; // global instance
 
@@ -28,10 +28,10 @@ Future<void> main() async {
     directory: dir.path,
   );
 
-  /*runApp(MaterialApp(
+  runApp(MaterialApp(
     home: HomePage(),
-  ));*/
-  runApp(
+  ));
+  /*runApp(
   DevicePreview(
     enabled: !kReleaseMode,
 
@@ -43,7 +43,7 @@ Future<void> main() async {
       home: HomePage(),
     ),
   ),
-);
+);*/
 }
 class HomePage extends StatelessWidget{
 
