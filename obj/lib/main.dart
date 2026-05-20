@@ -10,7 +10,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:isar/isar.dart';
 import 'result_model.dart';
 import 'isar_service.dart';
-
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 
 late Isar isar; // global instance
 
@@ -27,9 +28,22 @@ Future<void> main() async {
     directory: dir.path,
   );
 
-  runApp(MaterialApp(
+  /*runApp(MaterialApp(
     home: HomePage(),
-  ));
+  ));*/
+  runApp(
+  DevicePreview(
+    enabled: !kReleaseMode,
+
+    builder: (context) => MaterialApp(
+      useInheritedMediaQuery: true,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
+
+      home: HomePage(),
+    ),
+  ),
+);
 }
 class HomePage extends StatelessWidget{
 
@@ -811,9 +825,9 @@ Future<void> confirmSubmit() async {
   double screenWidth = MediaQuery.of(context).size.width;
 
   double fontSize = screenWidth < 400
-      ? 16
+      ? 15
       : screenWidth < 700
-          ? 19
+          ? 17
           : 22;
     
 
@@ -1405,7 +1419,7 @@ Future<void> confirmSubmit() async {
                   child: ElevatedButton(
                     onPressed:
                         currentQuestionIndex == 0 ? null : previousQuestion,
-                    child: Text("Previous"),
+                    child: Text("Back"),
                   ),
                 ),
 
@@ -1439,7 +1453,7 @@ Future<void> confirmSubmit() async {
               ],
             ),
           ),
-
+//
           /// NAVIGATION GRID (UNCHANGED)
           Container(
             height: 100,
