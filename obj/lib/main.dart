@@ -502,21 +502,22 @@ class _MySecondPageState extends State<SecondPage> {
 }
 
 class ThirdPage extends StatefulWidget {
-
   final int examDuration;
   final List<String> selectedSubjects;
   final String examMode; //  NEW
   final Map<int, List<Map<String, dynamic>>>? preloadedQuestions;// new
 
-  ThirdPage({
+  const ThirdPage({
+    super.key,
     required this.examDuration,
     required this.selectedSubjects,
     required this.examMode,
-     this.preloadedQuestions, // NEW
+    this.preloadedQuestions, // NEW
   });
 
   @override
-  _MyThirdPageState createState() => _MyThirdPageState();
+  //_MyThirdPageState createState() => _MyThirdPageState();
+  State<ThirdPage> createState() => _MyThirdPageState();
 }
 
 class _MyThirdPageState extends State<ThirdPage> {
@@ -627,7 +628,7 @@ class _MyThirdPageState extends State<ThirdPage> {
 
           TextButton(
             onPressed: () {
-              Navigator.pop(context, false); // ❌ Stay
+              Navigator.pop(context, false); //  Stay
             },
             child: Text("Cancel"),
           ),
@@ -645,7 +646,8 @@ class _MyThirdPageState extends State<ThirdPage> {
       );
     },
   );
-
+  //IMPORTANT: check widget is still mounted before using context
+   if (!mounted) return;
   /// If user confirmed exit
   if (shouldExit == true) {
 
@@ -1021,7 +1023,8 @@ Future<void> confirmSubmit() async {
     date: submissionTime,
     performances: performances,
   );
-
+  //IMPORTANT: ensure widget is still active
+  if (!mounted) return;
   /// 👉 THEN NAVIGATE
   Navigator.pushReplacement(
     context,
@@ -1577,7 +1580,8 @@ class ResultPage extends StatelessWidget {
   final Map<int, int> subjectTotals;
   final List<String> subjects;
 
-  ResultPage({
+  const ResultPage({
+    super.key,
     required this.score,
     required this.total,
     required this.examMode,
@@ -2203,43 +2207,49 @@ Widget build(BuildContext context) {
 }
 }
 
-class ResultHistoryPage extends StatelessWidget {
+class ResultHistoryPage extends StatefulWidget {
   const ResultHistoryPage({super.key});
+
+  @override
+  State<ResultHistoryPage> createState() => _ResultHistoryPageState();
+}
+
+class _ResultHistoryPageState extends State<ResultHistoryPage> {
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Result History"),
+        title: const Text("Result History"),
 
         actions: [
           IconButton(
-            icon: Icon(Icons.delete),
+            icon: const Icon(Icons.delete),
 
             onPressed: () async {
 
-              bool? confirm = await showDialog<bool>(
+              final confirm = await showDialog<bool>(
                 context: context,
-                builder: (context) {
+                builder: (dialogContext) {
                   return AlertDialog(
-                    title: Text("Clear History"),
-                    content: Text(
+                    title: const Text("Clear History"),
+                    content: const Text(
                       "Are you sure you want to delete all saved results?",
                     ),
 
                     actions: [
-
                       TextButton(
                         onPressed: () {
-                          Navigator.pop(context, false);
+                          Navigator.pop(dialogContext, false);
                         },
-                        child: Text("Cancel"),
+                        child: const Text("Cancel"),
                       ),
 
                       TextButton(
                         onPressed: () {
-                          Navigator.pop(context, true);
+                          Navigator.pop(dialogContext, true);
                         },
-                        child: Text(
+                        child: const Text(
                           "Delete",
                           style: TextStyle(color: Colors.red),
                         ),
@@ -2256,8 +2266,11 @@ class ResultHistoryPage extends StatelessWidget {
                   await isar.resultModels.clear();
                 });
 
+                /// SAFE USING mounted (NOW VALID)
+                if (!context.mounted) return;
+
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
+                  const SnackBar(
                     content: Text("Result history cleared"),
                   ),
                 );
@@ -2276,13 +2289,13 @@ class ResultHistoryPage extends StatelessWidget {
         builder: (context, snapshot) {
 
           if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           final results = snapshot.data!;
 
           if (results.isEmpty) {
-            return Center(child: Text("No results yet"));
+            return const Center(child: Text("No results yet"));
           }
 
           return ListView.builder(
@@ -2292,7 +2305,7 @@ class ResultHistoryPage extends StatelessWidget {
               final r = results[index];
 
               return Card(
-                margin: EdgeInsets.symmetric(
+                margin: const EdgeInsets.symmetric(
                   horizontal: 10,
                   vertical: 6,
                 ),
@@ -2303,29 +2316,28 @@ class ResultHistoryPage extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     maxLines: 1,
                   ),
+
                   subtitle: Padding(
-                    padding: EdgeInsets.only(top: 6),
+                    padding: const EdgeInsets.only(top: 6),
                     child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-
-                      Text("Mode: ${r.mode}"),
-                      Text(
-                        "Subjects: ${r.subjects.join(", ")}",
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        "Date: ${r.date.day}/${r.date.month}/${r.date.year} "
-                        "${r.date.hour.toString().padLeft(2, '0')}:"
-                        "${r.date.minute.toString().padLeft(2, '0')}",
-                      ),
-
-                      Text("Time Spent: ${r.timeSpent}s"),
-                    ],
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Mode: ${r.mode}"),
+                        Text(
+                          "Subjects: ${r.subjects.join(", ")}",
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        Text(
+                          "Date: ${r.date.day}/${r.date.month}/${r.date.year} "
+                          "${r.date.hour.toString().padLeft(2, '0')}:"
+                          "${r.date.minute.toString().padLeft(2, '0')}",
+                        ),
+                        Text("Time Spent: ${r.timeSpent}s"),
+                      ],
+                    ),
                   ),
                 ),
-              ),
               );
             },
           );
