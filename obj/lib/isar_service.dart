@@ -1,6 +1,6 @@
-import 'main.dart';
+//import 'main.dart';
 import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
+//import 'package:path_provider/path_provider.dart';
 import 'result_model.dart';
 
 Future<void> saveResultToIsar({

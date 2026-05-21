@@ -11,7 +11,7 @@ import 'package:isar/isar.dart';
 import 'result_model.dart';
 import 'isar_service.dart';
 //import 'package:device_preview/device_preview.dart';
-//import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart';
 
 late Isar isar; // global instance
 
@@ -46,7 +46,7 @@ Future<void> main() async {
 );*/
 }
 class HomePage extends StatelessWidget{
-
+  const HomePage({super.key}); // FIX LINE
   @override
   Widget build(BuildContext context){
     return Scaffold(
@@ -85,9 +85,10 @@ class HomePage extends StatelessWidget{
 }
 
 class SecondPage extends StatefulWidget {
-
+  const SecondPage({super.key}); // FIX LINE
   @override
-  _MySecondPageState createState() => _MySecondPageState();
+  //_MySecondPageState createState() => _MySecondPageState();
+  State<SecondPage> createState() => _MySecondPageState();
 }
 
 class _MySecondPageState extends State<SecondPage> {
@@ -177,7 +178,7 @@ class _MySecondPageState extends State<SecondPage> {
                   value: value,
                   child: Text(value),
                 );
-              }).toList(),
+              }),
             ],
 
             onChanged: (value) {
@@ -599,7 +600,9 @@ class _MyThirdPageState extends State<ThirdPage> {
       }
 
     } catch (e) {
-      print("JSON LOAD ERROR: $e");
+      if (kDebugMode) {
+    debugPrint("JSON LOAD ERROR: $e");
+    }
     }
 
     if (mounted) {
@@ -1087,11 +1090,14 @@ Future<void> confirmSubmit() async {
 }
 
 
-    return WillPopScope(
-      onWillPop: () async {
-        await confirmExit();
-        return false; // block default back
-      },
+    return PopScope(
+    canPop: false,
+
+    onPopInvokedWithResult: (didPop, result) async {
+      if (didPop) return;
+
+      await confirmExit();
+    },
     child: Focus(
     autofocus: true,
     onKeyEvent: (node, event) {
@@ -2100,7 +2106,7 @@ Widget build(BuildContext context) {
                 ),
 
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.95),
+                  color: Colors.white.withValues(alpha: 0.95),
 
                   borderRadius:
                       BorderRadius.circular(15),
@@ -2162,7 +2168,7 @@ Widget build(BuildContext context) {
 }
 
 class ResultHistoryPage extends StatelessWidget {
-
+  const ResultHistoryPage({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
