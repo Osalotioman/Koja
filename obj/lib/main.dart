@@ -93,7 +93,7 @@ class SecondPage extends StatefulWidget {
 
 class _MySecondPageState extends State<SecondPage> {
 /// SUBJECT & YEAR OPTIONS
-  List<String> subjectOptions = ["USEOFENGLISH", "GENERALPAPER", "CPE481", "CPE461"];
+  List<String> subjectOptions = ["USEOFENGLISH", "GENERALPAPER"];
   List<String> yearOptions = ["2021", "2022", "2023", "2024", "2025", "PRACTICE"];
 
   /// 4 SUBJECT SLOTS (Subject + Year)
@@ -1641,7 +1641,7 @@ Widget buildContent(String text) {
       spans.add(
         TextSpan(
           text: text.substring(lastIndex, match.start),
-          style: TextStyle(color: Colors.black, fontSize: 16),
+          style: TextStyle(color: Colors.black, fontSize: 14),
         ),
       );
     }
@@ -1651,7 +1651,7 @@ Widget buildContent(String text) {
         alignment: PlaceholderAlignment.middle,
         child: Math.tex(
           match.group(1)!,
-          textStyle: TextStyle(fontSize: 16),
+          textStyle: TextStyle(fontSize: 14),
         ),
       ),
     );
@@ -2192,7 +2192,7 @@ Widget build(BuildContext context) {
                           retryWrongQuestions(context),
 
                       child: Text(
-                        "Retry Wrong Questions",
+                        "Retry Wrong Ones",
                       ),
                     ),
                   ],
