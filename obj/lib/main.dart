@@ -1235,47 +1235,91 @@ Future<void> confirmSubmit() async {
                           ),
 
 
-                                          SizedBox(height: 8),
+                        SizedBox(height: 8),
 
-                                          ...List.generate(options.length, (index) {
-                                            String optionLetter = ["A", "B", "C", "D"][index];
-                                            return RadioListTile<int>(
-                                              contentPadding: EdgeInsets.zero,
-                                              title: Row(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text("$optionLetter. "),
-                                                  Expanded(
+              RadioGroup<int>(
+              groupValue:
+                  subjectAnswers[currentSubject]?[currentQuestionIndex],
+
+              onChanged: (value) {
+
+                if (checkedQuestions[currentSubject]
+                        ?[currentQuestionIndex] ==
+                    true) {
+                  return;
+                }
+
+                setState(() {
+                  subjectAnswers[currentSubject]
+                      ?[currentQuestionIndex] = value!;
+                });
+              },
+
+              child: Column(
+                children: List.generate(options.length, (index) {
+
+                  String optionLetter = ["A", "B", "C", "D"][index];
+
+                  return RadioListTile<int>(
+
+                    value: index,
+
+                    contentPadding: EdgeInsets.zero,
+
+                    title: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
+                      children: [
+
+                        Text("$optionLetter. "),
+
+                        Expanded(
                           child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment:
+                                CrossAxisAlignment.start,
+
                             children: [
 
-                              /// ✅ HANDLE STRING FORMAT (OLD)
                               if (options[index] is String)
                                 buildContent(options[index]),
 
-                              /// ✅ HANDLE MAP FORMAT (NEW)
                               if (options[index] is Map) ...[
 
-                                if ((options[index]["text"] ?? "").toString().isNotEmpty)
-                                  buildContent(options[index]["text"]),
+                                if ((options[index]["text"] ?? "")
+                                    .toString()
+                                    .isNotEmpty)
 
-                                if ((options[index]["image"] ?? "").toString().isNotEmpty)
+                                  buildContent(
+                                    options[index]["text"],
+                                  ),
+
+                                if ((options[index]["image"] ?? "")
+                                    .toString()
+                                    .isNotEmpty)
+
                                   Padding(
                                     padding: EdgeInsets.only(top: 5),
+
                                     child: GestureDetector(
                                       onTap: () {
+
                                         showDialog(
                                           context: context,
+
                                           builder: (_) => Dialog(
                                             child: InteractiveViewer(
-                                              child: Image.asset(options[index]["image"]),
+                                              child: Image.asset(
+                                                options[index]["image"],
+                                              ),
                                             ),
                                           ),
                                         );
                                       },
+
                                       child: ConstrainedBox(
-                                        constraints: BoxConstraints(maxHeight: 100),
+                                        constraints:
+                                            BoxConstraints(maxHeight: 100),
+
                                         child: Image.asset(
                                           options[index]["image"],
                                           fit: BoxFit.contain,
@@ -1287,20 +1331,12 @@ Future<void> confirmSubmit() async {
                             ],
                           ),
                         ),
-
-                        ],
-                      ),
-                      value: index,
-                      groupValue: subjectAnswers[currentSubject]?[currentQuestionIndex],
-                      onChanged: checkedQuestions[currentSubject]?[currentQuestionIndex] == true
-                          ? null // disable if checked
-                          : (value) {
-                              setState(() {
-                                subjectAnswers[currentSubject]?[currentQuestionIndex] = value!;
-                              });
-                            },
-                    );
-                  }),
+                      ],
+                    ),
+                  );
+                }),
+              ),
+            ),
                   /// ✅ STUDY MODE CHECK BUTTON
             if (widget.examMode == "Study")
               Padding(
