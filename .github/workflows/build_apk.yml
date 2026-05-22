@@ -29,6 +29,7 @@ jobs:
 
       # 5. Compile the APK (Unsigned debug/release hybrid)
       - run: flutter build apk --debug
+        working-directory: ./obj
 
       # 6. Upload the finished APK file to GitHub so you can download it
       - name: Upload APK Artifact
