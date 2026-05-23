@@ -32,8 +32,8 @@ dependencies:
     sdk: flutter
   csv: ^5.0.2
   flutter_math_fork: ^0.7.2
-  isar: ^3.1.0
-  isar_flutter_libs: any
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
   path_provider: any
   device_preview: ^1.2.0
 
