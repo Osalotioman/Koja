@@ -26,6 +26,7 @@ jobs:
 
       # 4. Fetch dependencies
       - run: flutter pub get
+        working-directory: ./obj
 
       # 5. Compile the APK (Unsigned debug/release hybrid)
       - run: flutter build apk --debug
