@@ -3,7 +3,7 @@ name: Flutter APK Build
 on:
   push:
     branches:
-      - post-utme-version # Change to master if your default branch is master
+      - post-utme-version
   workflow_dispatch:
 
 jobs:
@@ -28,10 +28,24 @@ jobs:
       # 4. Fetch dependencies
       - run: flutter pub get
 
-      # 5. Compile the APK (Unsigned debug/release hybrid)
+      # 5. Generate temporary key.properties
+      - name: Generate key.properties
+        run: |
+          cat > android/key.properties <<EOF
+          storePassword=dummyPassword
+          keyPassword=dummyPassword
+          keyAlias=dummyAlias
+          storeFile=dummy.jks
+          EOF
+
+      # 6. Create a dummy keystore file so Gradle can resolve the path
+      - name: Create dummy keystore
+        run: touch android/dummy.jks
+
+      # 7. Compile the APK
       - run: flutter build apk --debug
 
-      # 6. Upload the finished APK file to GitHub so you can download it
+      # 8. Upload the finished APK file to GitHub so you can download it
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
